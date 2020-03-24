@@ -10,10 +10,8 @@ public class AccountController {
 
         @GetMapping("/sign-up")
         public String signUpForm(Model model) {
-            Account account = Account.builder()
-                    .build();
 
-            model.addAttribute(account);
+            model.addAttribute(new SignUpForm());
             return "account/sign-up";
         }
 }
