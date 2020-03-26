@@ -1,16 +1,18 @@
 package com.whataboutmv.account;
 
-import com.whataboutmv.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.validation.constraints.AssertTrue;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +27,9 @@ class AccountControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @MockBean
+    JavaMailSender javaMailSender;
 
     @Test
     @DisplayName("회원 가입 화면이 보이는지 테스트")
@@ -60,5 +65,6 @@ class AccountControllerTest {
                 .andExpect(view().name("redirect:/"));
 
         assertTrue(accountRepository.existsByEmail("beck33333@naver.com"));
+        then(javaMailSender).should().send(any(SimpleMailMessage.class));
 }
 }
