@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,7 +44,8 @@ class AccountControllerTest {
                 .param("email", "email@email.com"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("error"))
-                .andExpect(view().name("account/checked-email"));
+                .andExpect(view().name("account/checked-email"))
+                .andExpect(unauthenticated());
     }
 
 
@@ -65,7 +68,8 @@ class AccountControllerTest {
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("nickname"))
                 .andExpect(model().attributeExists("numberOfUser"))
-                .andExpect(view().name("account/checked-email"));
+                .andExpect(view().name("account/checked-email"))
+                .andExpect(authenticated().withUsername("seungyeol"));
     }
 
 
@@ -76,7 +80,8 @@ class AccountControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/sign-up"))
-                .andExpect(model().attributeExists("signUpForm"));
+                .andExpect(model().attributeExists("signUpForm"))
+                .andExpect((unauthenticated()));
     }
 
     @Test
@@ -88,7 +93,8 @@ class AccountControllerTest {
                 .param("password", "12345")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("account/sign-up"));
+                .andExpect(view().name("account/sign-up"))
+                .andExpect(unauthenticated());
     }
 
     @Test
@@ -100,7 +106,8 @@ class AccountControllerTest {
                 .param("password", "12345678")
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("seungyeol"));
 
         Account account = accountRepository.findByEmail("beck33333@naver.com");
         assertNotNull(account);
