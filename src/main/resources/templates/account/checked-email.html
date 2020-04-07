@@ -3,7 +3,8 @@
 <head th:replace="fragments.html :: head"></head>
 <body class="bg-light">
     <div th:replace="fragments.html :: main-nav"></div>
-<div class="py-5 text-center" th:if="${error}">
+
+    <div class="py-5 text-center" th:if="${error}">
     <p class="lead">영화 어때 이메일 확인</p>
     <div class="alert alert-danger" role="alert">
         이메일 링크가 정확하지 않습니다.
