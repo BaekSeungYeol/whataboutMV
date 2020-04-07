@@ -37,7 +37,7 @@ class AccountControllerTest {
     JavaMailSender javaMailSender;
 
     @Test
-    @DisplayName("인증 메일 확인 - 입력값 오류")
+    @DisplayName("인증 메일 확인 - 입력값 오류 ")
     void checkEmailToken_with_wrong_input() throws Exception {
         mockMvc.perform(get("/check-email-token")
                 .param("token", "dsfkldsfklf")
@@ -50,7 +50,7 @@ class AccountControllerTest {
 
 
     @Test
-    @DisplayName("인증 메일 확인 - 입력값 정상")
+    @DisplayName("인증 메일 확인 - 입력값 정상 ")
     void checkEmailToken() throws Exception {
         Account account = Account.builder()
                 .email("test@email.com")
@@ -74,7 +74,7 @@ class AccountControllerTest {
 
 
     @Test
-    @DisplayName("회원 가입 화면이 보이는지 테스트")
+    @DisplayName("회원 가입 화면이 보이는지 테스트 ")
     void singUpForm() throws Exception {
         mockMvc.perform(get("/sign-up"))
                 .andDo(print())
@@ -85,7 +85,7 @@ class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("회원 가입 처리 - 입력값 오류")
+    @DisplayName("회원 가입 처리 - 입력값 오류 ")
     void signUpSubmit_with_wrong_input() throws Exception {
         mockMvc.perform(post("/sign-up")
                 .param("nickname", "seungyeol")
@@ -98,7 +98,7 @@ class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("회원 가입 처리 - 입력값 정상")
+    @DisplayName("회원 가입 처리 - 입력값 정상 ")
     void signUpSubmit_with_correct_input() throws Exception {
         mockMvc.perform(post("/sign-up")
                 .param("nickname", "seungyeol")
