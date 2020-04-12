@@ -35,7 +35,7 @@ public class Account {
     // 웹 사이트 URL
     private String url;
     // 선호하는 영화
-    private String preferenceMovie;
+    private String preferenceKind;
     // 좋아하는 영화배우
     private String preferenceActor;
     // 살고있는 지역
