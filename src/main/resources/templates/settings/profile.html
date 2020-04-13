@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: settings-menu(currentMenu='profile')"></div>
+        </div>
+        <div class="col-8">
+            <div class="row">
+                <h2 class="col-sm-12" th:text="${account.nickname}">SeungYeol</h2>
+            </div>
+            <div class="row mt-3">
+                <form class="col-sm-6" action="#"
+                      th:action="@{/settings/profile}" th:object="${profile}" method="post" novalidate>
+
+                    <div class="form-group">
+                        <label for="bio">한 줄 소개</label>
+                        <input id="bio" type="text" th:field="*{bio}" class="form-control"
+                               placeholder="간략한 소개를 부탁합니다." aria-describedby="bioHelp" required>
+                        <small id="bioHelp" class="form-text text-muted">
+                            길지 않게 35자 이내로 입력하세요.
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}">
+                            조금 길어요.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="url">링크</label>
+                        <input id="url" type="url" th:field="*{url}" class="form-control"
+                               placeholder="http://whataboutmv.com" aria-describedby="urlHelp" required>
+                        <small id="urlHelp" class="form-text text-muted">
+                            Instagram 등 본인을 표현할 수 있는 링크를 추가하세요.
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('url')}" th:errors="*{url}">
+                            옳바른 URL이 아닙니다. 예시처럼 입력해 주세요.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                    <label for="company">선호 장르</label>
+                    <input id="company" type="text" th:field="*{preferenceKind}" class="form-control"
+                           placeholder="어떤 장르의 영화를 선호하시나요?" aria-describedby="kindHelp" required>
+                    <small id="kindHelp" class="form-text text-muted">
+                        학생 직장인
+                    </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">선호 배우</label>
+                        <input id="company2" type="text" th:field="*{preferenceActor}" class="form-control"
+                               placeholder="어떤 영화 배우를 가장 좋아하시나요?" aria-describedby="actorHelp" required>
+                        <small id="actorHelp" class="form-text text-muted">
+                            디카프리오
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">선호 모임 지역</label>
+                        <input id="location" type="text" th:field="*{location}" class="form-control"
+                               placeholder="강남 건대"
+                               aria-describedby="locationdHelp" required>
+                        <small id="locationdHelp" class="form-text text-muted">
+                            사는 곳 혹은 선호 모임 지역을 알려주세요.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit"
+                                aria-describedby="submitHelp">수정하기</button>
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>
