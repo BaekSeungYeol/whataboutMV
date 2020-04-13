@@ -1,6 +1,7 @@
 package com.whataboutmv.account;
 
 import com.whataboutmv.domain.Account;
+import com.whataboutmv.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -80,5 +81,14 @@ public class AccountService implements UserDetailsService {
     public void completeSignUp(Account account) {
         account.completeSignUp();
         login(account);
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        account.setUrl(profile.getUrl());
+        account.setPreferenceKind(profile.getPreferenceKind());
+        account.setPreferenceActor(profile.getPreferenceActor());
+        account.setLocation(profile.getLocation());
+        account.setBio(profile.getBio());
+        accountRepository.save(account);
     }
 }

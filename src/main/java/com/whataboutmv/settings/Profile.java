@@ -3,8 +3,10 @@ package com.whataboutmv.settings;
 
 import com.whataboutmv.domain.Account;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Profile {
     //자기 소개
     private String bio;
