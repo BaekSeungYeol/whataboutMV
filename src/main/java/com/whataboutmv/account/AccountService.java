@@ -1,6 +1,7 @@
 package com.whataboutmv.account;
 
 import com.whataboutmv.domain.Account;
+import com.whataboutmv.settings.PasswordForm;
 import com.whataboutmv.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -91,5 +92,11 @@ public class AccountService implements UserDetailsService {
         account.setBio(profile.getBio());
         account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
+    }
+
+
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(newPassword);
+        accountRepository.save(account); // merge
     }
 }
