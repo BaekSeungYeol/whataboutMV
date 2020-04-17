@@ -47,13 +47,13 @@ public class Account {
 
     private boolean comuCreatedByEmail;
 
-    private boolean comuCreatedByWeb;
+    private boolean comuCreatedByWeb = true;
 
     private boolean comuEnrollmentResultByEmail;
 
-    private boolean comuEnrollmentResultByWeb;
+    private boolean comuEnrollmentResultByWeb = true;
     // 바뀐 정보를 받을 것인가
-    private boolean comuUpdatedByWeb;
+    private boolean comuUpdatedByWeb = true;
 
     private boolean comuUpdatedByEmail;
 

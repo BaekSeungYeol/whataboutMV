@@ -108,5 +108,6 @@ public class AccountService implements UserDetailsService {
         account.setComuUpdatedByEmail(notifications.isComuUpdatedByEmail());
         account.setComuEnrollmentResultByEmail(notifications.isComuEnrollmentResultByEmail());
         account.setComuEnrollmentResultByWeb(notifications.isComuEnrollmentResultByWeb());
+        accountRepository.save(account);
     }
 }
