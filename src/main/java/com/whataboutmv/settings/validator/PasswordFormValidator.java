@@ -1,5 +1,6 @@
-package com.whataboutmv.settings;
+package com.whataboutmv.settings.validator;
 
+import com.whataboutmv.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

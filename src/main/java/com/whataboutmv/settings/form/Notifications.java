@@ -1,4 +1,4 @@
-package com.whataboutmv.settings;
+package com.whataboutmv.settings.form;
 
 import lombok.Data;
 

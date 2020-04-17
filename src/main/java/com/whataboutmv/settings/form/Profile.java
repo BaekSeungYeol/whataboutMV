@@ -1,4 +1,4 @@
-package com.whataboutmv.settings;
+package com.whataboutmv.settings.form;
 
 
 import com.whataboutmv.domain.Account;

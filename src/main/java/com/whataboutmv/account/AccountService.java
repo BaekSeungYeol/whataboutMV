@@ -1,9 +1,8 @@
 package com.whataboutmv.account;
 
 import com.whataboutmv.domain.Account;
-import com.whataboutmv.settings.Notifications;
-import com.whataboutmv.settings.PasswordForm;
-import com.whataboutmv.settings.Profile;
+import com.whataboutmv.settings.form.Notifications;
+import com.whataboutmv.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -101,5 +100,11 @@ public class AccountService implements UserDetailsService {
     public void updateNotifications(Account account, Notifications notifications) {
         modelMapper.map(notifications, account);
         accountRepository.save(account);
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);// detached
+        accountRepository.save(account); // merge
+        login(account);
     }
 }
