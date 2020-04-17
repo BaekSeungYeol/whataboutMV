@@ -1,6 +1,7 @@
 package com.whataboutmv.account;
 
 import com.whataboutmv.domain.Account;
+import com.whataboutmv.settings.Notifications;
 import com.whataboutmv.settings.PasswordForm;
 import com.whataboutmv.settings.Profile;
 import lombok.RequiredArgsConstructor;
@@ -96,7 +97,16 @@ public class AccountService implements UserDetailsService {
 
 
     public void updatePassword(Account account, String newPassword) {
-        account.setPassword(newPassword);
+        account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account); // merge
+    }
+
+    public void updateNotifications(Account account, Notifications notifications) {
+        account.setComuCreatedByEmail(notifications.isComuCreatedByEmail());
+        account.setComuCreatedByWeb(notifications.isComuCreatedByWeb());
+        account.setComuUpdatedByWeb(notifications.isComuUpdatedByWeb());
+        account.setComuUpdatedByEmail(notifications.isComuUpdatedByEmail());
+        account.setComuEnrollmentResultByEmail(notifications.isComuEnrollmentResultByEmail());
+        account.setComuEnrollmentResultByWeb(notifications.isComuEnrollmentResultByWeb());
     }
 }

@@ -57,8 +57,6 @@ public class Account {
 
     private boolean comuUpdatedByEmail;
 
-    private boolean studyUpdateByWeb;
-
     private LocalDateTime emailCheckTokenGeneratedAt;
 
     public void generateEmailCheckToken() {
