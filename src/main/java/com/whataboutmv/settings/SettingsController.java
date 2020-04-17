@@ -4,6 +4,7 @@ import com.whataboutmv.account.AccountService;
 import com.whataboutmv.account.CurrentUser;
 import com.whataboutmv.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -19,12 +20,10 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class SettingsController {
 
-
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(new PasswordFormValidator());
     }
-    private final AccountService accountService;
 
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
     static final String SETTINGS_PROFILE_URL = "/settings/profile";
@@ -36,10 +35,14 @@ public class SettingsController {
     static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
     static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
 
+    private final AccountService accountService;
+    private final ModelMapper modelMapper;
+
+
     @GetMapping(SETTINGS_PROFILE_URL)
     public String updateProfileForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new Profile(account));
+        model.addAttribute(modelMapper.map(account,Profile.class));
         return SETTINGS_PROFILE_VIEW_NAME;
     }
 
@@ -79,7 +82,7 @@ public class SettingsController {
     @GetMapping(SETTINGS_NOTIFICATIONS_URL)
     public String passwordNotificationsForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new Notifications(account));
+        model.addAttribute(modelMapper.map(account, Notifications.class));
         return SETTINGS_NOTIFICATIONS_VIEW_NAME;
     }
 
@@ -92,9 +95,8 @@ public class SettingsController {
             return SETTINGS_NOTIFICATIONS_VIEW_NAME;
         }
 
-
         accountService.updateNotifications(account, notifications);
-        attributes.addFlashAttribute("message", "패스워드 수정을 완료했습니다.");
+        attributes.addFlashAttribute("message", "알림 수정을 완료했습니다.");
         return "redirect:" + "/profile/" + account.getNickname();
     }
 }

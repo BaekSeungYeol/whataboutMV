@@ -1,13 +1,10 @@
 package com.whataboutmv.settings;
 
-import com.whataboutmv.domain.Account;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 public class Notifications {
 
     private String profileImage;
@@ -28,12 +25,4 @@ public class Notifications {
 
     private boolean communityCreatedByWeb;
 
-    public Notifications(Account account) {
-        this.communityCreatedByWeb = account.isComuCreatedByWeb();
-        this.comuCreatedByEmail = account.isComuCreatedByEmail();
-        this.comuEnrollmentResultByEmail = account.isComuEnrollmentResultByEmail();
-        this.comuEnrollmentResultByWeb = account.isComuUpdatedByEmail();
-        this.comuUpdatedByEmail = account.isComuUpdatedByEmail();
-        this.comuUpdatedByWeb = account.isComuUpdatedByWeb();
-    }
 }

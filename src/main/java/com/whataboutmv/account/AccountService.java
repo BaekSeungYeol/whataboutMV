@@ -5,6 +5,7 @@ import com.whataboutmv.settings.Notifications;
 import com.whataboutmv.settings.PasswordForm;
 import com.whataboutmv.settings.Profile;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     private Account saveNewAccount(@Valid SignUpForm signUpForm) {
         Account account = Account.builder()
@@ -86,12 +88,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, Profile profile) {
-        account.setUrl(profile.getUrl());
-        account.setPreferenceKind(profile.getPreferenceKind());
-        account.setPreferenceActor(profile.getPreferenceActor());
-        account.setLocation(profile.getLocation());
-        account.setBio(profile.getBio());
-        account.setProfileImage(profile.getProfileImage());
+        modelMapper.map(profile,account);
         accountRepository.save(account);
     }
 
@@ -102,12 +99,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateNotifications(Account account, Notifications notifications) {
-        account.setComuCreatedByEmail(notifications.isComuCreatedByEmail());
-        account.setComuCreatedByWeb(notifications.isComuCreatedByWeb());
-        account.setComuUpdatedByWeb(notifications.isComuUpdatedByWeb());
-        account.setComuUpdatedByEmail(notifications.isComuUpdatedByEmail());
-        account.setComuEnrollmentResultByEmail(notifications.isComuEnrollmentResultByEmail());
-        account.setComuEnrollmentResultByWeb(notifications.isComuEnrollmentResultByWeb());
+        modelMapper.map(notifications, account);
         accountRepository.save(account);
     }
 }
