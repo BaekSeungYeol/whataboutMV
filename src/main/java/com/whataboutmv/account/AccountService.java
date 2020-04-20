@@ -1,6 +1,7 @@
 package com.whataboutmv.account;
 
 import com.whataboutmv.domain.Account;
+import com.whataboutmv.domain.Tag;
 import com.whataboutmv.settings.form.Notifications;
 import com.whataboutmv.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -116,5 +119,15 @@ public class AccountService implements UserDetailsService {
         mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() +
                 "&email=" + account.getEmail());
         javaMailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().add(tag));
+    }
+
+    public Set<Tag> getTags(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getTags();
     }
 }
