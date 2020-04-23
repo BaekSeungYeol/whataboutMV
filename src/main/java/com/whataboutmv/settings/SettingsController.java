@@ -6,10 +6,12 @@ import com.whataboutmv.account.AccountService;
 import com.whataboutmv.account.CurrentUser;
 import com.whataboutmv.domain.Account;
 import com.whataboutmv.domain.Tag;
+import com.whataboutmv.domain.Zone;
 import com.whataboutmv.settings.form.*;
 import com.whataboutmv.settings.validator.NicknameValidator;
 import com.whataboutmv.settings.validator.PasswordFormValidator;
 import com.whataboutmv.tag.TagRepository;
+import com.whataboutmv.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,7 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
+    private final ZoneRepository zoneRepository;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -62,6 +65,9 @@ public class SettingsController {
 
     static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
     static final String SETTINGS_TAGS_URL = "/" + SETTINGS_TAGS_VIEW_NAME;
+
+    static final String SETTINGS_ZONES_VIEW_NAME = "settings/zones";
+    static final String SETTINGS_ZONES_URL = "/" + SETTINGS_ZONES_VIEW_NAME;
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String updateProfileForm(@CurrentUser Account account, Model model) {
@@ -184,6 +190,42 @@ public class SettingsController {
         }
 
         accountService.removeTag(account,tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(SETTINGS_ZONES_URL)
+    public String updateZonesForm(@CurrentUser Account account, Model model) throws JsonProcessingException {
+        model.addAttribute(account);
+
+        Set<Zone> zones = accountService.getZones(account);
+        model.addAttribute("zones", zones.stream().map(Zone::toString).collect(Collectors.toList()));
+
+        List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(allZones));
+
+        return SETTINGS_ZONES_VIEW_NAME;
+    }
+    @PostMapping(SETTINGS_ZONES_URL + "/add")
+    @ResponseBody
+    public ResponseEntity addZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.addZone(account, zone);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(SETTINGS_ZONES_URL + "/remove")
+    @ResponseBody
+    public ResponseEntity removeZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.removeZone(account, zone);
         return ResponseEntity.ok().build();
     }
 }

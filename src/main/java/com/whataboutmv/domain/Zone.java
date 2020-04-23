@@ -2,18 +2,17 @@ package com.whataboutmv.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter @EqualsAndHashCode(of = "id")
 @Builder @AllArgsConstructor @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"city", "province"}))
 public class Zone {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Column(nullable = false)
@@ -25,4 +24,8 @@ public class Zone {
     @Column(nullable = true)
     private String province;
 
+    @Override
+    public String toString() {
+        return String.format("%s(%s)/%s", city, localNameOfCity, province);
+    }
 }
