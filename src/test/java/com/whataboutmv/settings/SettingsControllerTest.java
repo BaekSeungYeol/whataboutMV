@@ -275,7 +275,7 @@ class SettingsControllerTest {
                 .andExpect(view().name(SettingsController.SETTINGS_ZONES_VIEW_NAME))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("whitelist"))
-                .andExpect(model().attributeExists("zone"));
+                .andExpect(model().attributeExists("zones"));
     }
     @WithAccount("seungyeol")
     @DisplayName("계정의 지역 정보 추가")
