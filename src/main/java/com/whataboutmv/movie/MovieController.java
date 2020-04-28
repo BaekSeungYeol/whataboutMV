@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -26,6 +27,8 @@ public class MovieController {
     private final MovieService movieService;
     private final ModelMapper modelMapper;
     private final MovieFormValidator movieFormValidator;
+    private final MovieRepository movieRepository;
+
 
     @InitBinder("movieForm")
     public void movieFormInitBinder(WebDataBinder webDataBinder) {
@@ -48,5 +51,12 @@ public class MovieController {
 
         Movie newMovie = movieService.createNewMovie(modelMapper.map(movieForm, Movie.class), account);
         return "redirect:/movie/" + URLEncoder.encode(newMovie.getPath(), StandardCharsets.UTF_8);
+    }
+
+    @GetMapping("/movie/{path}")
+    public String viewMovie(@CurrentUser Account account, @PathVariable String path, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(movieRepository.findByPath(path));
+        return "movie/view";
     }
 }
