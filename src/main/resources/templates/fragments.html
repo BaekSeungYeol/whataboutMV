@@ -51,7 +51,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <form th:action="@{/search/study}" class="form-inline" method="get">
+                <form th:action="@{/search/movie}" class="form-inline" method="get">
                     <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="영화 찾기" aria-label="Search" />
                 </form>
             </li>
@@ -189,7 +189,7 @@
                 </span>
             <span sec:authorize="isAuthenticated()"
                   th:if="${movie.published && !movie.closed && movie.isManager(#authentication.principal)}">
-                    <a class="btn btn-outline-primary" th:href="@{'/study/' + ${movie.path} + '/new-event'}">
+                    <a class="btn btn-outline-primary" th:href="@{'/movie/' + ${movie.path} + '/new-event'}">
                         <i class="fa fa-plus"></i> 모임 만들기
                     </a>
                 </span>
@@ -248,6 +248,39 @@
             </div>
         </li>
     </ul>
+</div>
+<div th:fragment="movie-settings-menu (currentMenu)" class="list-group">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'description'}? active"
+       href="#" th:href="@{'/movie/' + ${movie.path} + '/settings/description'}">소개</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'image'}? active"
+       href="#" th:href="@{'/movie/' + ${movie.path} + '/settings/image'}">배너 이미지</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active"
+       href="#" th:href="@{'/movie/' + ${movie.path} + '/settings/tags'}">영화 주제</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active"
+       href="#" th:href="@{'/movie/' + ${movie.path} + '/settings/zones'}">활동 지역</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'movie'}? active"
+       href="#" th:href="@{'/movie/' + ${movie.path} + '/settings/movie'}">모임</a>
+</div>
+
+<div th:fragment="editor-script">
+    <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            $('#fullDescription').summernote({
+                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+                placeholder: '모임에 대해 자세히 적어 주세요.',
+                tabsize: 2,
+                height: 300
+            });
+        });
+    </script>
+</div>
+
+<div th:fragment="message" th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+    <span th:text="${message}">완료</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 
 </html>

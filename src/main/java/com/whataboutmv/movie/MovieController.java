@@ -56,8 +56,10 @@ public class MovieController {
 
     @GetMapping("/movie/{path}")
     public String viewMovie(@CurrentUser Account account, @PathVariable String path, Model model) {
+        Movie movie = movieService.getMovie(path);
+        
         model.addAttribute(account);
-        model.addAttribute(movieRepository.findByPath(path));
+        model.addAttribute(movie);
         return "movie/view";
     }
 
