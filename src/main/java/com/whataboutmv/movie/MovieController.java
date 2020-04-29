@@ -44,8 +44,9 @@ public class MovieController {
     }
 
     @PostMapping("/new-movie")
-    public String newStudySubmit(@CurrentUser Account account, @Valid MovieForm movieForm, Errors errors) {
+    public String newStudySubmit(@CurrentUser Account account, @Valid MovieForm movieForm, Errors errors, Model model) {
         if(errors.hasErrors()) {
+            model.addAttribute(account);
             return "movie/form";
         }
 
@@ -58,5 +59,12 @@ public class MovieController {
         model.addAttribute(account);
         model.addAttribute(movieRepository.findByPath(path));
         return "movie/view";
+    }
+
+    @GetMapping("/movie/{path}/members")
+    public String viewMovieMembers(@CurrentUser Account account, @PathVariable String path, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(movieRepository.findByPath(path));
+        return "movie/members";
     }
 }
