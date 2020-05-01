@@ -21,7 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @Controller
-@RequestMapping("/study/{path}/settings")
+@RequestMapping("/movie/{path}/settings")
 @RequiredArgsConstructor
 public class MovieSettingsController {
 
