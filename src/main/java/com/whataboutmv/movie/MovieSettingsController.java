@@ -54,8 +54,38 @@ public class MovieSettingsController {
         return "redirect:/movie/" + getPath(path) + "/settings/description";
     }
 
+    @GetMapping("/banner")
+    public String movieImageForm(@CurrentUser Account account, @PathVariable String path, Model model) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        model.addAttribute(account);
+        model.addAttribute(movie);
+        return "movie/settings/banner";
+    }
+
+    @PostMapping("/banner")
+    public String movieImageSubmit(@CurrentUser Account account, @PathVariable String path, String image, RedirectAttributes attributes) {
+        Movie movie = movieService.getMovieToUpdate(account, path);
+        movieService.updateMovieImage(movie,image);
+        attributes.addFlashAttribute("message", "모임 이미지를 수정했습니다.");
+        return "redirect:/movie/" + getPath(path) + "/settings/banner";
+    }
+
     private String getPath(String path) {
         return URLEncoder.encode(path, StandardCharsets.UTF_8);
+    }
+
+    @PostMapping("/banner/enable")
+    public String enableMovieBanner(@CurrentUser Account account, @PathVariable String path) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        movieService.enableMovieBanner(movie);
+        return "redirect:/movie/" + getPath(path) + "/settings/banner";
+    }
+
+    @PostMapping("/banner/disable")
+    public String disableMovieBanner(@CurrentUser Account account, @PathVariable String path) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        movieService.disableMovieBanner(movie);
+        return "redirect:/movie/" + getPath(path) + "/settings/banner";
     }
 
 

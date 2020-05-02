@@ -44,5 +44,16 @@ public class MovieService {
         modelMapper.map(movieDescriptionForm, movie);
     }
 
+    public void updateMovieImage(Movie movie, String image) {
+        movie.setImage(image);
+    }
+
+    public void enableMovieBanner(Movie movie) {
+        movie.setUseBanner(true);
+    }
+    public void disableMovieBanner(Movie movie) {
+        movie.setUseBanner(false);
+    }
+
 
 }
