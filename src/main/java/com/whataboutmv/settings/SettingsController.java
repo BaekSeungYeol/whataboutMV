@@ -11,6 +11,7 @@ import com.whataboutmv.settings.form.*;
 import com.whataboutmv.settings.validator.NicknameValidator;
 import com.whataboutmv.settings.validator.PasswordFormValidator;
 import com.whataboutmv.tag.TagRepository;
+import com.whataboutmv.tag.TagService;
 import com.whataboutmv.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -38,6 +39,7 @@ public class SettingsController {
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
     private final ZoneRepository zoneRepository;
+    private final TagService tagService;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -167,15 +169,9 @@ public class SettingsController {
     @PostMapping(SETTINGS_TAGS_URL + "/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
 
-        Tag tag = tagRepository.findByTitle(title);
-        if(tag == null) {
-            tag = tagRepository.save(Tag.builder().title(title).build());
-        }
-
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
         accountService.addTag(account,tag);
-
         return ResponseEntity.ok().build();
     }
 

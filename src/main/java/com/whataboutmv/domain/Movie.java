@@ -12,6 +12,12 @@ import java.util.Set;
         @NamedAttributeNode("zones"),
         @NamedAttributeNode("managers"),
         @NamedAttributeNode("members")})
+@NamedEntityGraph(name = "Movie.withTagsAndManagers", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Movie.withZonesAndManagers", attributeNodes = {
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers")})
 @Entity
 @Getter @Setter @EqualsAndHashCode(of = "id")
 @Builder @AllArgsConstructor @NoArgsConstructor

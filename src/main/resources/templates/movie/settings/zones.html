@@ -3,9 +3,11 @@
 <head th:replace="fragments.html :: head"></head>
 <body class="bg-light">
 <div th:replace="fragments.html :: main-nav"></div>
+<div th:replace="fragments.html :: movie-banner"></div>
 <div class="container">
     <div class="row mt-5 justify-content-center">
         <div class="col-2">
+            <div th:replace="fragments.html :: movie-info"></div>
             <div th:replace="fragments.html :: settings-menu(currentMenu='zones')"></div>
         </div>
         <div class="col-8">
@@ -28,6 +30,6 @@
     <div th:replace="fragments.html :: footer"></div>
 </div>
 <script th:replace="fragments.html :: ajax-csrf-header"></script>
-<script th:replace="fragments.html :: update-zones(baseUrl='/settings/zones')"></script>
+<script th:replace="fragments.html :: update-zones(baseUrl='/movie/' + ${movie.path} + '/settings/zones')"></script>
 </body>
 </html>

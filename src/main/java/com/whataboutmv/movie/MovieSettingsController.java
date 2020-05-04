@@ -1,24 +1,33 @@
 package com.whataboutmv.movie;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whataboutmv.account.CurrentUser;
 import com.whataboutmv.domain.Account;
 import com.whataboutmv.domain.Movie;
+import com.whataboutmv.domain.Tag;
+import com.whataboutmv.domain.Zone;
 import com.whataboutmv.movie.form.MovieDescriptionForm;
+import com.whataboutmv.settings.form.TagForm;
+import com.whataboutmv.settings.form.ZoneForm;
+import com.whataboutmv.tag.TagRepository;
+import com.whataboutmv.tag.TagService;
+import com.whataboutmv.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/movie/{path}/settings")
@@ -28,6 +37,11 @@ public class MovieSettingsController {
     private final MovieRepository movieRepository;
     private final MovieService movieService;
     private final ModelMapper modelMapper;
+    private final ObjectMapper objectMapper;
+    private final TagService tagService;
+    private final TagRepository tagRepository;
+    private final ZoneRepository zoneRepository;
+
 
     @GetMapping("/description")
     public String viewMovieSetting(@CurrentUser Account account, @PathVariable String path, Model model) {
@@ -88,5 +102,71 @@ public class MovieSettingsController {
         return "redirect:/movie/" + getPath(path) + "/settings/banner";
     }
 
+    @GetMapping("/tags")
+    public String movieTagsForm(@CurrentUser Account account, @PathVariable String path, Model model)
+    throws JsonProcessingException {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        model.addAttribute(account);
+        model.addAttribute(movie);
+
+        model.addAttribute("tags", movie.getTags().stream().map(Tag::getTitle).collect(Collectors.toList()));
+        List<String> allTagTitles = tagRepository.findAll().stream()
+                .map(Tag::getTitle).collect(Collectors.toList());
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(allTagTitles));
+        return "movie/settings/banner";
+    }
+
+    @PostMapping("/tags/add")
+    @ResponseBody
+    public ResponseEntity addTag(@CurrentUser Account account,@PathVariable String path,
+                                 @RequestBody TagForm tagForm) {
+
+        Movie movie = movieService.getMovieToUpdateTag(account, path);
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
+        movieService.addTag(movie,tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/tags/remove")
+    @ResponseBody
+    public ResponseEntity removeTag(@CurrentUser Account account, @PathVariable String path,
+                                    @RequestBody TagForm tagForm) {
+        Movie movie = movieService.getMovieToUpdateTag(account, path);
+        Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
+        if(tag == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        movieService.removeTag(movie,tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/zones/add")
+    @ResponseBody
+    public ResponseEntity addZone(@CurrentUser Account account, @PathVariable String path,
+                                  @RequestBody ZoneForm zoneForm) {
+        Movie movie = movieService.getMovieToUpdateZone(account,path);
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        if(zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        movieService.addZone(movie,zone);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/zones/remove")
+    @ResponseBody
+    public ResponseEntity removeZone(@CurrentUser Account account, @PathVariable String path,
+                                  @RequestBody ZoneForm zoneForm) {
+        Movie movie = movieService.getMovieToUpdateZone(account,path);
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        if(zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        movieService.removeZone(movie,zone);
+        return ResponseEntity.ok().build();
+    }
 
 }

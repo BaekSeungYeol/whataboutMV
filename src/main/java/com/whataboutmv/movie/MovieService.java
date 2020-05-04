@@ -2,6 +2,8 @@ package com.whataboutmv.movie;
 
 import com.whataboutmv.domain.Account;
 import com.whataboutmv.domain.Movie;
+import com.whataboutmv.domain.Tag;
+import com.whataboutmv.domain.Zone;
 import com.whataboutmv.movie.form.MovieDescriptionForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -55,5 +57,46 @@ public class MovieService {
         movie.setUseBanner(false);
     }
 
+    public void addTag(Movie movie, Tag tag) {
+        movie.getTags().add(tag);
+    }
+    public void removeTag(Movie movie, Tag tag) {
+        movie.getTags().remove(tag);
+    }
+
+    public void addZone(Movie movie, Zone zone) {
+        movie.getZones().add(zone);
+    }
+
+    public void removeZone(Movie movie, Zone zone) {
+        movie.getZones().remove(zone);
+    }
+
+    public Movie getMovieToUpdateTag(Account account, String path) {
+        Movie movie = movieRepository.findMovieWithTagsByPath(path);
+        checkIfExistingMovie(path,movie);
+        checkIfManager(account, movie);
+        return movie;
+    }
+
+    private void checkIfManager(Account account, Movie movie) {
+        if(!account.isManagerOf(movie)) {
+            throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");
+        }
+    }
+
+    private void checkIfExistingMovie(String path, Movie movie) {
+        if(movie == null) {
+            throw new IllegalArgumentException(path + "에 해당하는 모임이 없습니다.");
+        }
+    }
+
+
+    public Movie getMovieToUpdateZone(Account account, String path) {
+        Movie movie = movieRepository.findMovieWithZonesByPath(path);
+        checkIfExistingMovie(path,movie);
+        checkIfManager(account, movie);
+        return movie;
+    }
 
 }

@@ -12,4 +12,11 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
 
     @EntityGraph(value = "Movie.withAll", type= EntityGraph.EntityGraphType.LOAD)
     Movie findByPath(String path);
+
+    //WithTags는 무시 키워드
+    @EntityGraph(value = "Movie.withTagsAndManagers", type = EntityGraph.EntityGraphType.FETCH)
+    Movie findMovieWithTagsByPath(String path);
+
+    @EntityGraph(value = "Movie.withZonesAndManagers", type = EntityGraph.EntityGraphType.FETCH)
+    Movie findMovieWithZonesByPath(String path);
 }
