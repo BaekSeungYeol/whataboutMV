@@ -189,5 +189,47 @@ public class MovieSettingsController {
         model.addAttribute(movie);
         return "movie/settings/movie";
     }
+    @PostMapping("/movie/publish")
+    public String publishStudy(@CurrentUser Account account, @PathVariable String path,
+                               RedirectAttributes attributes) {
+        Movie movie = movieService.getMovieToUpdateStatus(account, path);
+        movieService.publish(movie);
+        attributes.addFlashAttribute("message", "모임을 공개했습니다.");
+        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+    }
+    @PostMapping("/movie/close")
+    public String closeStudy(@CurrentUser Account account, @PathVariable String path,
+                             RedirectAttributes attributes) {
+        Movie movie = movieService.getMovieToUpdateStatus(account,path);
+        movieService.close(movie);
+        attributes.addFlashAttribute("message", "모임을 종료합니다.");
+        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+    }
+    @PostMapping("/recruit/start")
+    public String startRecruit(@CurrentUser Account account, @PathVariable String path, Model model,
+                               RedirectAttributes attributes) {
+        Movie movie = movieService.getMovieToUpdateStatus(account,path);
+        if(!movie.canUpdateRecruiting()) {
+            attributes.addFlashAttribute("message", "1시간 안에 인원 모집 설정을 여러번 변경할 수는 없습니다.");
+            return "redirect:/movie/" + getPath(path) + "/settings/movie";
+        }
 
+        movieService.startRecruit(movie);
+        attributes.addFlashAttribute("message", "인원 모집을 시작합니다.");
+        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+    }
+
+    @PostMapping("/recruit/stop")
+    public String stopRecruit(@CurrentUser Account account, @PathVariable String path, Model model,
+                              RedirectAttributes attributes) {
+        Movie movie = movieService.getMovieToUpdateStatus(account,path);
+        if(!movie.canUpdateRecruiting()) {
+            attributes.addFlashAttribute("message", "1시간 안에 인원 모집 설정을 여러번 변경할 수는 없습니다.");
+            return "redirect:/movie/" + getPath(path) + "/settings/movie";
+        }
+
+        movieService.stopRecruit(movie);
+        attributes.addFlashAttribute("message", "인원 모집을 종료합니다.");
+        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+    }
 }

@@ -99,4 +99,27 @@ public class MovieService {
         return movie;
     }
 
+    public Movie getMovieToUpdateStatus(Account account, String path) {
+        Movie movie = movieRepository.findMovieWithManagersByPath(path);
+        checkIfExistingMovie(path,movie);
+        checkIfManager(account, movie);
+        return movie;
+    }
+
+    public void publish(Movie movie) {
+        movie.publish();
+    }
+
+    public void close(Movie movie) {
+        movie.close();
+    }
+
+    public void startRecruit(Movie movie) {
+        movie.startRecruit();
+    }
+
+    public void stopRecruit(Movie movie) {
+        movie.stopRecruit();
+    }
 }
+
