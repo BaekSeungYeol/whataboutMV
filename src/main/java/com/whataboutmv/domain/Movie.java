@@ -84,6 +84,6 @@ public class Movie {
     }
 
     public String getImage() {
-        return image != null ? image : "/image/default_banner.jpg";
+        return image != null ? image : "/image/coupon.png";
     }
 }

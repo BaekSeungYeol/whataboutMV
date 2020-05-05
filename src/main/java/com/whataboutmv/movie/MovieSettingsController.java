@@ -113,7 +113,7 @@ public class MovieSettingsController {
         List<String> allTagTitles = tagRepository.findAll().stream()
                 .map(Tag::getTitle).collect(Collectors.toList());
         model.addAttribute("whitelist", objectMapper.writeValueAsString(allTagTitles));
-        return "movie/settings/banner";
+        return "movie/settings/tags";
     }
 
     @PostMapping("/tags/add")
@@ -139,6 +139,19 @@ public class MovieSettingsController {
 
         movieService.removeTag(movie,tag);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/zones")
+    public String movieZoneForm(@CurrentUser Account account, @PathVariable String path, Model model)
+            throws JsonProcessingException {
+        Movie movie = movieService.getMovieToUpdate(account, path);
+        model.addAttribute(account);
+        model.addAttribute(movie);
+
+        model.addAttribute("zones", movie.getZones().stream().map(Zone::toString).collect(Collectors.toList()));
+        List<String> allZones = zoneRepository.findAll().stream()
+                .map(Zone::toString).collect(Collectors.toList());
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(allZones));
+        return "movie/settings/zones";
     }
 
     @PostMapping("/zones/add")
@@ -167,6 +180,14 @@ public class MovieSettingsController {
 
         movieService.removeZone(movie,zone);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/movie")
+    public String movieSettingForm(@CurrentUser Account account, @PathVariable String path, Model model) {
+        Movie movie = movieService.getMovieToUpdate(account, path);
+        model.addAttribute(account);
+        model.addAttribute(movie);
+        return "movie/settings/movie";
     }
 
 }

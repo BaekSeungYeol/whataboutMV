@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments.html :: head"></head>
-<body class="bg-light">
-<div th:replace="fragments.html :: main-nav"></div>
+<body>
+<nav th:replace="fragments.html :: main-nav"></nav>
 <div th:replace="fragments.html :: movie-banner"></div>
 <div class="container">
-    <div class="row mt-5 justify-content-center">
+    <div th:replace="fragments.html :: movie-info"></div>
+    <div th:replace="fragments.html :: movie-menu(movieMenu='settings')"></div>
+    <div class="row mt-3 justify-content-center">
         <div class="col-2">
-            <div th:replace="fragments.html :: movie-info"></div>
-            <div th:replace="fragments.html :: settings-menu(currentMenu='tags')"></div>
+            <div th:replace="fragments.html :: movie-settings-menu(currentMenu='tags')"></div>
         </div>
         <div class="col-8">
             <div class="row">
-                <h2 class="col-sm-12">관심있는 영화 장르</h2>
+                <h2 class="col-sm-12">영화 주제</h2>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="alert alert-info" role="alert">
-                        관심이 있는 영화 주제를 입력해주세요. 해당 장르의 글이 생기면 알림을 받을 수 있습니다. 태그를 입력하고 콤마(,)
-                        또는 엔터를 입력해 주세요.
+                        모임에서 다루는 영화를 태그로 등록하세요. 태그를 입력하고 콤마(,) 또는 엔터를 입력하세요.
                     </div>
-                    <div id="whitelist" th:text="${whitelist}" hidden></div>
+                    <div id="whitelist" th:text="${whitelist}" hidden>
+                    </div>
                     <input id="tags" type="text" name="tags" th:value="${#strings.listJoin(tags, ',')}"
-                           class="tagify-outside" aria-describedby="tagHelp"/>
+                           class="tagify-outside" aria-describedby="tagHelp">
                 </div>
             </div>
         </div>
