@@ -65,7 +65,7 @@ public class MovieSettingsController {
 
         movieService.updateMovieDescription(movie, movieDescriptionForm);
         attributes.addFlashAttribute("message", "모임 소개를 수정했습니다.");
-        return "redirect:/movie/" + getPath(path) + "/settings/description";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/description";
     }
 
     @GetMapping("/banner")
@@ -81,25 +81,21 @@ public class MovieSettingsController {
         Movie movie = movieService.getMovieToUpdate(account, path);
         movieService.updateMovieImage(movie,image);
         attributes.addFlashAttribute("message", "모임 이미지를 수정했습니다.");
-        return "redirect:/movie/" + getPath(path) + "/settings/banner";
-    }
-
-    private String getPath(String path) {
-        return URLEncoder.encode(path, StandardCharsets.UTF_8);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/banner";
     }
 
     @PostMapping("/banner/enable")
     public String enableMovieBanner(@CurrentUser Account account, @PathVariable String path) {
         Movie movie = movieService.getMovieToUpdate(account,path);
         movieService.enableMovieBanner(movie);
-        return "redirect:/movie/" + getPath(path) + "/settings/banner";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/banner";
     }
 
     @PostMapping("/banner/disable")
     public String disableMovieBanner(@CurrentUser Account account, @PathVariable String path) {
         Movie movie = movieService.getMovieToUpdate(account,path);
         movieService.disableMovieBanner(movie);
-        return "redirect:/movie/" + getPath(path) + "/settings/banner";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/banner";
     }
 
     @GetMapping("/tags")
@@ -195,7 +191,7 @@ public class MovieSettingsController {
         Movie movie = movieService.getMovieToUpdateStatus(account, path);
         movieService.publish(movie);
         attributes.addFlashAttribute("message", "모임을 공개했습니다.");
-        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
     }
     @PostMapping("/movie/close")
     public String closeStudy(@CurrentUser Account account, @PathVariable String path,
@@ -203,7 +199,7 @@ public class MovieSettingsController {
         Movie movie = movieService.getMovieToUpdateStatus(account,path);
         movieService.close(movie);
         attributes.addFlashAttribute("message", "모임을 종료합니다.");
-        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
     }
     @PostMapping("/recruit/start")
     public String startRecruit(@CurrentUser Account account, @PathVariable String path, Model model,
@@ -211,12 +207,12 @@ public class MovieSettingsController {
         Movie movie = movieService.getMovieToUpdateStatus(account,path);
         if(!movie.canUpdateRecruiting()) {
             attributes.addFlashAttribute("message", "1시간 안에 인원 모집 설정을 여러번 변경할 수는 없습니다.");
-            return "redirect:/movie/" + getPath(path) + "/settings/movie";
+            return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
         }
 
         movieService.startRecruit(movie);
         attributes.addFlashAttribute("message", "인원 모집을 시작합니다.");
-        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
     }
 
     @PostMapping("/recruit/stop")
@@ -225,12 +221,12 @@ public class MovieSettingsController {
         Movie movie = movieService.getMovieToUpdateStatus(account,path);
         if(!movie.canUpdateRecruiting()) {
             attributes.addFlashAttribute("message", "1시간 안에 인원 모집 설정을 여러번 변경할 수는 없습니다.");
-            return "redirect:/movie/" + getPath(path) + "/settings/movie";
+            return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
         }
 
         movieService.stopRecruit(movie);
         attributes.addFlashAttribute("message", "인원 모집을 종료합니다.");
-        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
     }
 
     @PostMapping("/movie/path")
@@ -247,7 +243,7 @@ public class MovieSettingsController {
 
         movieService.updateMoviePath(movie,newPath);
         attributes.addFlashAttribute("message", "모임 경로를 수정했습니다.");
-        return "redirect:/movie/" + getPath(newPath) + "/settings/movie";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
     }
 
     @PostMapping("/movie/title")
@@ -263,7 +259,7 @@ public class MovieSettingsController {
 
         movieService.updateMovieTitle(movie, newTitle);
         attributes.addFlashAttribute("message", "모임 이름을 수정했습니다.");
-        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+        return "redirect:/movie/" + movie.getEncodedPath() + "/settings/movie";
 
     }
 

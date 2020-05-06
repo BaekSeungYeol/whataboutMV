@@ -24,4 +24,7 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Movie findMovieWithManagersByPath(String path);
 
     boolean existsByTitle(String newTitle);
+
+    @EntityGraph(value = "Movie.withMembers", type = EntityGraph.EntityGraphType.FETCH)
+    Movie findMovieWithMembersByPath(String path);
 }

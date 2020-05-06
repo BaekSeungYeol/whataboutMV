@@ -151,5 +151,13 @@ public class MovieService {
             throw new IllegalArgumentException("모임을 삭제할 수 없습니다.");
         }
     }
+
+    public void addMember(Movie movie, Account account) {
+        movie.addMember(account);
+    }
+
+    public void removeMember(Movie movie, Account account) {
+        movie.removeMember(account);
+    }
 }
 

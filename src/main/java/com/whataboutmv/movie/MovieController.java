@@ -69,4 +69,19 @@ public class MovieController {
         model.addAttribute(movieRepository.findByPath(path));
         return "movie/members";
     }
+
+    @GetMapping("/movie/{path}/join")
+    public String joinMovie(@CurrentUser Account account, @PathVariable String path) {
+        Movie movie = movieRepository.findMovieWithMembersByPath(path);
+        movieService.addMember(movie,account);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/members";
+    }
+
+    @GetMapping("/movie/{path}/leave")
+    public String leaveMovie(@CurrentUser Account account, @PathVariable String path) {
+        Movie movie = movieRepository.findMovieWithMembersByPath(path);
+        movieService.removeMember(movie,account);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/members";
+    }
+
 }
