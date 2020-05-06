@@ -232,4 +232,38 @@ public class MovieSettingsController {
         attributes.addFlashAttribute("message", "인원 모집을 종료합니다.");
         return "redirect:/movie/" + getPath(path) + "/settings/movie";
     }
+
+    @PostMapping("/movie/path")
+    public String updateMoviePath(@CurrentUser Account account, @PathVariable String path,
+                                  String newPath, Model model, RedirectAttributes attributes) {
+
+        Movie movie = movieService.getMovieToUpdateStatus(account,path);
+        if(!movieService.isValidPath(newPath)) {
+            model.addAttribute(account);
+            model.addAttribute(movie);
+            model.addAttribute("moviePathError", "해당 모임 경로는 사용할 수 없습니다. 다른 값을 입력하세요.");
+            return "movie/settings/movie";
+        }
+
+        movieService.updateMoviePath(movie,newPath);
+        attributes.addFlashAttribute("message", "모임 경로를 수정했습니다.");
+        return "redirect:/movie/" + getPath(newPath) + "/settings/movie";
+    }
+
+    @PostMapping("/movie/title")
+    public String updateMovieTitle(@CurrentUser Account account, @PathVariable String path, String newTitle,
+                                   Model model, RedirectAttributes attributes) {
+        Movie movie = movieService.getMovieToUpdateStatus(account, path);
+        if(!movieService.isValidTitle(newTitle)) {
+            model.addAttribute(account);
+            model.addAttribute(movie);
+            model.addAttribute("moviePathError", "해당 모임 이름을 사용할 수 없습니다. 다른 값을 입력하세요.");
+            return "movie/settings/movie";
+        }
+
+        movieService.updateMovieTitle(movie, newTitle);
+        attributes.addFlashAttribute("message", "모임 이름을 수정했습니다.");
+        return "redirect:/movie/" + getPath(path) + "/settings/movie";
+
+    }
 }

@@ -5,11 +5,14 @@ import com.whataboutmv.domain.Movie;
 import com.whataboutmv.domain.Tag;
 import com.whataboutmv.domain.Zone;
 import com.whataboutmv.movie.form.MovieDescriptionForm;
+import com.whataboutmv.movie.form.MovieForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.whataboutmv.movie.form.MovieForm.VALID_PATH_PATTERN;
 
 @Service
 @RequiredArgsConstructor
@@ -120,6 +123,25 @@ public class MovieService {
 
     public void stopRecruit(Movie movie) {
         movie.stopRecruit();
+    }
+
+    public boolean isValidPath(String newPath) {
+        if(!newPath.matches(VALID_PATH_PATTERN)) {
+            return false;
+        }
+        return !movieRepository.existsByPath(newPath);
+    }
+
+    public void updateMoviePath(Movie movie, String newPath) {
+        movie.setPath(newPath);
+    }
+
+    public boolean isValidTitle(String newTitle) {
+        return newTitle.length() <= 50;
+    }
+
+    public void updateMovieTitle(Movie movie, String newTitle) {
+        movie.setTitle(newTitle);
     }
 }
 

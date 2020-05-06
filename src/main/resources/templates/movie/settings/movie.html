@@ -74,12 +74,12 @@
             <hr th:if="${!movie.closed}"/>
             <div class="row" th:if="${!movie.closed}">
                 <h5 class="col-sm-12">모임 경로</h5>
-                <form class="col-sm-12 needs-validation" action="#" th:action="@{'/movie/' + ${movie.path} + '/settings/movie/path'}" method="post" novalidate>
+                <form class="col-sm-12 needs-validation" th:action="@{'/movie/' + ${movie.path} + '/settings/movie/path'}" method="post" novalidate>
                     <div class="alert alert-warning" role="alert">
                         모임 경로를 수정하면 이전에 사용하던 경로로 모임에 접근할 수 없으니 주의하세요. <br/>
                     </div>
                     <div class="form-group">
-                        <input id="path" type="text" name="newPath" th:value="${newPath}" class="form-control"
+                        <input id="path" type="text" name="newPath" th:value="${movie.path}" class="form-control"
                                placeholder="예) movie-path" aria-describedby="pathHelp" required>
                         <small id="pathHelp" class="form-text text-muted">
                             공백없이 문자, 숫자, 대시(-)와 언더바(_)만 3자 이상 20자 이내로 입력하세요. 모임 홈 주소에 사용합니다. 예) /movie/<b>movie-path</b>
