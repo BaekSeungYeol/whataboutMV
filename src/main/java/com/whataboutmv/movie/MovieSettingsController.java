@@ -266,4 +266,11 @@ public class MovieSettingsController {
         return "redirect:/movie/" + getPath(path) + "/settings/movie";
 
     }
+
+    @PostMapping("/movie/remove")
+    public String removeMovie(@CurrentUser Account account, @PathVariable String path, Model model) {
+        Movie movie = movieService.getMovieToUpdateStatus(account,path);
+        movieService.remove(movie);
+        return "redirect:/";
+    }
 }

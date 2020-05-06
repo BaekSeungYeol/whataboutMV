@@ -143,5 +143,13 @@ public class MovieService {
     public void updateMovieTitle(Movie movie, String newTitle) {
         movie.setTitle(newTitle);
     }
+
+    public void remove(Movie movie) {
+        if(movie.isRemovable()) {
+            movieRepository.delete(movie);
+        } else {
+            throw new IllegalArgumentException("모임을 삭제할 수 없습니다.");
+        }
+    }
 }
 
