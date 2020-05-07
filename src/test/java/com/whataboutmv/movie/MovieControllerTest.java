@@ -15,8 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,19 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RequiredArgsConstructor
 class MovieControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    MovieService movieService;
-    @Autowired
-    MovieRepository movieRepository;
-    @Autowired
-    AccountRepository accountRepository;
+    @Autowired protected MockMvc mockMvc;
+    @Autowired protected MovieService movieService;
+    @Autowired protected MovieRepository movieRepository;
+    @Autowired protected AccountRepository accountRepository;
 
-    @AfterEach
-    void afterEach() {
-        accountRepository.deleteAll();
-    }
 
     @Test
     @WithAccount("seungyeol")
@@ -111,5 +102,54 @@ class MovieControllerTest {
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("movie"));
 
+    }
+
+    @Test
+    @WithAccount("seungyeol")
+    @DisplayName("모임 가입")
+    void joinMovie() throws Exception {
+        Account winwarm = createAccount("winwarm");
+
+        Movie movie = createMovie("test-comu", winwarm);
+
+        mockMvc.perform(get("/movie/" + movie.getPath() + "/join"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/movie/" + movie.getPath() + "/members"));
+
+        Account seungyeol = accountRepository.findByNickname("seungyeol");
+        assertTrue(movie.getMembers().contains(seungyeol));
+    }
+
+    @Test
+    @WithAccount("seungyeol")
+    @DisplayName("모임 탈퇴")
+    void leaveMovie() throws Exception {
+        Account winwarm = createAccount("winwarm");
+
+        Movie movie = createMovie("test-comu", winwarm);
+        Account seungyeol = accountRepository.findByNickname("seungyeol");
+
+        movieService.addMember(movie,seungyeol);
+
+        mockMvc.perform(get("/movie/" + movie.getPath() + "/leave"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/movie/" + movie.getPath() + "/members"));
+
+        assertFalse(movie.getMembers().contains(seungyeol));
+    }
+
+    protected Account createAccount(String nickname) {
+        Account winwarm = new Account();
+        winwarm.setNickname(nickname);
+        winwarm.setEmail(nickname + "@email.com");
+        accountRepository.save(winwarm);
+        return winwarm;
+    }
+
+    protected Movie createMovie(String path, Account manager) {
+        Movie movie = new Movie();
+        movie.setPath(path);
+        movieService.createNewMovie(movie, manager);
+        return movie;
     }
 }
