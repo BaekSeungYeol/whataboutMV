@@ -29,7 +29,7 @@ public class EventController {
     private final EventValidator eventValidator;
 
     @GetMapping("/new-event")
-    public String newEventForm(@CurrentUser Account account, @PathVariable String path, Model model{
+    public String newEventForm(@CurrentUser Account account, @PathVariable String path, Model model){
         Movie movie = movieService.getMovieToUpdateStatus(account,path);
         model.addAttribute(movie);
         model.addAttribute(account);
