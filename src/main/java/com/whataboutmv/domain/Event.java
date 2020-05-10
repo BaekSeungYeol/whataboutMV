@@ -20,7 +20,7 @@ public class Event {
     private Movie movie;
 
     @ManyToOne
-    private Account createBy;
+    private Account createdBy;
 
     @Column(nullable = false)
     private String title;
@@ -30,10 +30,13 @@ public class Event {
 
     @Column(nullable = false)
     private LocalDateTime createdDateTime;
+
     @Column(nullable = false)
-    private LocalDateTime endEnrollmentTime;
+    private LocalDateTime endEnrollmentDateTime;
+
     @Column(nullable = false)
-    private LocalDateTime startDataTime;
+    private LocalDateTime startDateTime;
+
     @Column(nullable = false)
     private LocalDateTime endDateTime;
 
@@ -45,4 +48,5 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;
+
 }

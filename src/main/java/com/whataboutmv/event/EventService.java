@@ -3,11 +3,23 @@ package com.whataboutmv.event;
 import com.whataboutmv.domain.Account;
 import com.whataboutmv.domain.Event;
 import com.whataboutmv.domain.Movie;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
+@Transactional
 @Service
+@RequiredArgsConstructor
 public class EventService {
-    public Event createEvent(Event map, Movie movie, Account account) {
-        return null;
+
+    private final EventRepository eventRepository;
+
+    public Event createEvent(Event event, Movie movie, Account account) {
+        event.setCreatedBy(account);
+        event.setCreatedDateTime(LocalDateTime.now());
+        event.setMovie(movie);
+        return eventRepository.save(event);
     }
 }
