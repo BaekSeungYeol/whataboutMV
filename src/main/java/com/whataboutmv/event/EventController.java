@@ -16,6 +16,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/movie/{path}")
@@ -64,6 +67,64 @@ public class EventController {
         model.addAttribute(eventRepository.findById(id).orElseThrow());
         model.addAttribute(movieService.getMovie(path));
         return "event/view";
+    }
+
+    @GetMapping("/events")
+    public String viewMovieEvents(@CurrentUser Account account, @PathVariable String path, Model model) {
+
+        Movie movie = movieService.getMovie(path);
+        model.addAttribute(movie);
+        model.addAttribute(account);
+
+        List<Event> events = eventRepository.findByMovieOrderByStartDateTime(movie);
+        List<Event> oldEvents = new ArrayList<>();
+        List<Event> newEvents = new ArrayList<>();
+
+        events.forEach(e -> {
+            if(e.getEndDateTime().isBefore(LocalDateTime.now())) {
+                oldEvents.add(e);
+            }
+            else {
+                newEvents.add(e);
+            }
+        });
+
+        model.addAttribute("newEvents", newEvents);
+        model.addAttribute("oldEvents", oldEvents);
+
+        return "/movie/events";
+    }
+
+    @GetMapping("/events/{id}/edit")
+    public String updateEventForm(@CurrentUser Account account,
+                                  @PathVariable String path, @PathVariable Long id, Model model) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        Event event = eventRepository.findById(id).orElseThrow();
+        model.addAttribute(movie);
+        model.addAttribute(account);
+        model.addAttribute(event);
+        model.addAttribute(modelMapper.map(event, EventForm.class));
+        return "event/update-form";
+    }
+
+    @PostMapping("/events/{id}/edit")
+    public String updateEventSubmit(@CurrentUser Account account, @PathVariable String path,
+                                    @PathVariable Long id, @Valid EventForm eventForm, Errors errors, Model model) {
+
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        Event event = eventRepository.findById(id).orElseThrow();
+        eventForm.setEventType(event.getEventType());
+        eventValidator.validateUpdateForm(eventForm, event, errors);
+
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            model.addAttribute(movie);
+            model.addAttribute(event);
+            return "event/update-form";
+        }
+
+        eventService.updateEvent(event, eventForm);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
     }
 
 }
