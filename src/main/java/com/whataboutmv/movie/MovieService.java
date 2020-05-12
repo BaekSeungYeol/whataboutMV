@@ -159,5 +159,12 @@ public class MovieService {
     public void removeMember(Movie movie, Account account) {
         movie.removeMember(account);
     }
+
+    public Movie getMovieToEnroll(String path) {
+        Movie movie = movieRepository.findMovieOnlyByPath(path);
+        checkIfExistingMovie(path, movie);
+
+        return movie;
+    }
 }
 

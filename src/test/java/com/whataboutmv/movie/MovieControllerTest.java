@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
-class MovieControllerTest {
+public class MovieControllerTest {
 
     @Autowired protected MockMvc mockMvc;
     @Autowired protected MovieService movieService;

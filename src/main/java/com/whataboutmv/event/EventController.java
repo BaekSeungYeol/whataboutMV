@@ -134,4 +134,17 @@ public class EventController {
         return "redirect:/movie/" + movie.getEncodedPath() + "/events";
     }
 
+    @PostMapping("/events/{id}/enroll")
+    public String newEnrollment(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id) {
+        Movie movie = movieService.getMovieToEnroll(path);
+        eventService.newEnrollment(eventRepository.findById(id).orElseThrow(), account);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + id;
+    }
+    @PostMapping("/events/{id}/disenroll")
+    public String cancelEnrollment(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id) {
+        Movie movie = movieService.getMovieToEnroll(path);
+        eventService.cancelEnrollment(eventRepository.findById(id).orElseThrow(), account);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + id;
+    }
+
 }
