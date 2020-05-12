@@ -127,4 +127,11 @@ public class EventController {
         return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
     }
 
+    @DeleteMapping("/events/{id}")
+    public String cancelEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id) {
+        Movie movie = movieService.getMovieToUpdateStatus(account,path);
+        eventService.deleteEvent(eventRepository.findById(id).orElseThrow());
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events";
+    }
+
 }
