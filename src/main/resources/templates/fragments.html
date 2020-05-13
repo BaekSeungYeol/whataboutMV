@@ -167,7 +167,7 @@
 <div th:fragment="movie-info">
     <div class="row pt-4 text-left justify-content-center bg-light">
         <div class="col-6">
-            <a href="#" class="text-decoration-none" th:href="@{'/movie/' + ${movie.path}}">
+            <a href="#" class="text-decoration-none" th:href="@{'/movie/' + ${movie.path} }">
                 <span class="h2" th:text="${movie.title}">영화 이름</span>
             </a>
         </div>
@@ -393,7 +393,7 @@
     </script>
 </div>
 
-<div th:fragment="update-zones (baseUrl)">
+    <div th:fragment="update-zones (baseUrl)">
     <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
     <script type="application/javascript">
         $(function () {
@@ -440,6 +440,8 @@
             tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
         });
     </script>
+    </div>
+
     <div th:fragment="date-time">
         <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
         <script type="application/javascript">
@@ -473,7 +475,7 @@
     <div th:fragment="event-form (mode, action)">
         <div class="py-5 text-center">
             <h2>
-                <a th:href="@{'/movie/' + ${movie.path}}"><span th:text="${movie.title}"></span></a> /
+                <a th:href="@{'/movie/' + ${movie.path}}"><span th:text="${movie.title}">모임</span></a> /
                 <span th:if="${mode == 'edit'}" th:text="${event.title}"></span>
                 <span th:if="${mode == 'new'}">새 모임 만들기</span>
             </h2>
@@ -563,6 +565,4 @@
             </form>
         </div>
     </div>
-
-</div>
 </html>
