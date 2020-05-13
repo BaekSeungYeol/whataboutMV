@@ -2,10 +2,12 @@ package com.whataboutmv.event;
 
 import com.whataboutmv.account.CurrentUser;
 import com.whataboutmv.domain.Account;
+import com.whataboutmv.domain.Enrollment;
 import com.whataboutmv.domain.Event;
 import com.whataboutmv.domain.Movie;
 import com.whataboutmv.event.form.EventForm;
 import com.whataboutmv.event.validator.EventValidator;
+import com.whataboutmv.movie.MovieRepository;
 import com.whataboutmv.movie.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,6 +32,7 @@ public class EventController {
     private final ModelMapper modelMapper;
     private final EventValidator eventValidator;
     private final EventRepository eventRepository;
+    private final MovieRepository movieRepository;
 
 
     @InitBinder("eventForm")
@@ -61,11 +64,11 @@ public class EventController {
     }
 
     @GetMapping("/events/{id}")
-    public String getEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id,
+    public String getEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable("id") Event event,
                            Model model) {
         model.addAttribute(account);
-        model.addAttribute(eventRepository.findById(id).orElseThrow());
-        model.addAttribute(movieService.getMovie(path));
+        model.addAttribute(event);
+        model.addAttribute(movieRepository.findMovieWithManagersByPath(path));
         return "event/view";
     }
 
@@ -97,9 +100,8 @@ public class EventController {
 
     @GetMapping("/events/{id}/edit")
     public String updateEventForm(@CurrentUser Account account,
-                                  @PathVariable String path, @PathVariable Long id, Model model) {
+                                  @PathVariable String path, @PathVariable("id") Event event, Model model) {
         Movie movie = movieService.getMovieToUpdate(account,path);
-        Event event = eventRepository.findById(id).orElseThrow();
         model.addAttribute(movie);
         model.addAttribute(account);
         model.addAttribute(event);
@@ -109,10 +111,9 @@ public class EventController {
 
     @PostMapping("/events/{id}/edit")
     public String updateEventSubmit(@CurrentUser Account account, @PathVariable String path,
-                                    @PathVariable Long id, @Valid EventForm eventForm, Errors errors, Model model) {
+                                    @PathVariable("id") Event event, @Valid EventForm eventForm, Errors errors, Model model) {
 
         Movie movie = movieService.getMovieToUpdate(account,path);
-        Event event = eventRepository.findById(id).orElseThrow();
         eventForm.setEventType(event.getEventType());
         eventValidator.validateUpdateForm(eventForm, event, errors);
 
@@ -128,23 +129,53 @@ public class EventController {
     }
 
     @DeleteMapping("/events/{id}")
-    public String cancelEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id) {
+    public String cancelEvent(@CurrentUser Account account, @PathVariable String path, @PathVariable("id") Event event) {
         Movie movie = movieService.getMovieToUpdateStatus(account,path);
-        eventService.deleteEvent(eventRepository.findById(id).orElseThrow());
+        eventService.deleteEvent(event);
         return "redirect:/movie/" + movie.getEncodedPath() + "/events";
     }
 
     @PostMapping("/events/{id}/enroll")
-    public String newEnrollment(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id) {
+    public String newEnrollment(@CurrentUser Account account, @PathVariable String path, @PathVariable("id") Event event) {
         Movie movie = movieService.getMovieToEnroll(path);
-        eventService.newEnrollment(eventRepository.findById(id).orElseThrow(), account);
-        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + id;
+        eventService.newEnrollment(event,account);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
     }
     @PostMapping("/events/{id}/disenroll")
-    public String cancelEnrollment(@CurrentUser Account account, @PathVariable String path, @PathVariable Long id) {
+    public String cancelEnrollment(@CurrentUser Account account, @PathVariable String path, @PathVariable("id") Event event) {
         Movie movie = movieService.getMovieToEnroll(path);
-        eventService.cancelEnrollment(eventRepository.findById(id).orElseThrow(), account);
-        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + id;
+        eventService.cancelEnrollment(event, account);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
+    }
+
+    @GetMapping("events/{eventId}/enrollments/{enrollmentId}/accept")
+    public String acceptEnrollment(@CurrentUser Account account, @PathVariable String path,
+                                   @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        eventService.acceptEnrollment(event,enrollment);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
+    }
+
+    @GetMapping("events/{eventId}/enrollments/{enrollmentId}/reject")
+    public String rejectEnrollment(@CurrentUser Account account, @PathVariable String path,
+                                   @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        eventService.rejectEnrollment(event,enrollment);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
+    }
+    @GetMapping("events/{eventId}/enrollments/{enrollmentId}/checkin")
+    public String checkInEnrollment(@CurrentUser Account account, @PathVariable String path,
+                                   @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        eventService.checkInEnrollment(enrollment);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
+    }
+    @GetMapping("events/{eventId}/enrollments/{enrollmentId}/cancel-checkin")
+    public String cancelEnrollment(@CurrentUser Account account, @PathVariable String path,
+                                   @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Movie movie = movieService.getMovieToUpdate(account,path);
+        eventService.cancelCheckInEnrollment(enrollment);
+        return "redirect:/movie/" + movie.getEncodedPath() + "/events/" + event.getId();
     }
 
 }
