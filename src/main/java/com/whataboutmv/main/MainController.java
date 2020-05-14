@@ -1,7 +1,7 @@
 package com.whataboutmv.main;
 
-import com.whataboutmv.account.CurrentUser;
-import com.whataboutmv.domain.Account;
+import com.whataboutmv.modules.account.CurrentUser;
+import com.whataboutmv.modules.account.Account;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

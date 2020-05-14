@@ -6,13 +6,12 @@
 <body>
 <nav th:replace="fragments.html :: main-nav"></nav>
 <div th:replace="fragments.html :: movie-banner"></div>
-
 <div class="container">
     <div class="row py-4 text-left justify-content-center bg-light">
         <div class="col-6">
                 <span class="h2">
                 <a href="#" class="text-decoration-none" th:href="@{'/movie/' + ${movie.path}}">
-                    <span th:text="${movie.title}">모임 이름</span>
+                    <span th:text="${movie.title}">영화모임 이름</span>
                 </a> / </span>
             <span class="h2" th:text="${event.title}"></span>
         </div>
@@ -31,7 +30,6 @@
                     </span>
                 </span>
         </div>
-
         <div class="modal fade" id="disenroll" tabindex="-1" role="dialog" aria-labelledby="leaveTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -141,8 +139,8 @@
         <dl class="col-3 pt-3 text-right">
             <dt class="font-weight-light">모집 방법</dt>
             <dd>
-                <span th:if="${event.eventType == T(com.whataboutmv.domain.EventType).FCFS}">선착순</span>
-                <span th:if="${event.eventType == T(com.whataboutmv.domain.EventType).CONFIRMATIVE}">관리자 확인</span>
+                <span th:if="${event.eventType == T(com.movieolle.modules.event.EventType).FCFS}">선착순</span>
+                <span th:if="${event.eventType == T(com.movieolle.modules.event.EventType).CONFIRMATIVE}">관리자 확인</span>
             </dd>
 
             <dt class="font-weight-light">모집 인원</dt>
@@ -213,7 +211,6 @@
     </div>
     <div th:replace="fragments.html :: footer"></div>
 </div>
-<script th:replace="fragments.html :: tooltip"></script>
 <script th:replace="fragments.html :: date-time"></script>
 </body>
 </html>
