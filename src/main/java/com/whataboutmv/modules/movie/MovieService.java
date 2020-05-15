@@ -1,11 +1,13 @@
 package com.whataboutmv.modules.movie;
 
 import com.whataboutmv.modules.account.Account;
+import com.whataboutmv.modules.movie.event.MovieCreatedEvent;
 import com.whataboutmv.modules.tag.Tag;
 import com.whataboutmv.modules.zone.Zone;
 import com.whataboutmv.modules.movie.form.MovieDescriptionForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +21,14 @@ public class MovieService {
 
     private final MovieRepository movieRepository;
     private final ModelMapper modelMapper;
+    private final ApplicationEventPublisher eventPublisher;
+
 
     public Movie createNewMovie(Movie movie, Account account) {
-        Movie savedMovie = movieRepository.save(movie);
-        savedMovie.addManager(account);
-        return savedMovie;
+        Movie newMovie = movieRepository.save(movie);
+        newMovie.addManager(account);
+        eventPublisher.publishEvent(new MovieCreatedEvent(newMovie));
+        return newMovie;
     }
 
     public Movie getMovieToUpdate(Account account, String path) {
