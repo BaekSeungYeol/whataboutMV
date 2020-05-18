@@ -104,6 +104,10 @@
             <version>1.4.197</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -141,6 +145,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

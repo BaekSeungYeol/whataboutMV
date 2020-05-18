@@ -27,7 +27,6 @@ public class MovieService {
     public Movie createNewMovie(Movie movie, Account account) {
         Movie newMovie = movieRepository.save(movie);
         newMovie.addManager(account);
-        eventPublisher.publishEvent(new MovieCreatedEvent(newMovie));
         return newMovie;
     }
 
@@ -112,8 +111,9 @@ public class MovieService {
         return movie;
     }
 
-    public void publish(Movie movie) {
+    public void publish(Movie movie){
         movie.publish();
+        this.eventPublisher.publishEvent(new MovieCreatedEvent(movie));
     }
 
     public void close(Movie movie) {
