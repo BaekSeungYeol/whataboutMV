@@ -4,6 +4,7 @@ import com.whataboutmv.modules.account.CurrentUser;
 import com.whataboutmv.modules.account.Account;
 import com.whataboutmv.modules.movie.Movie;
 import com.whataboutmv.modules.movie.MovieRepository;
+import com.whataboutmv.modules.notification.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MainController {
 
     private final MovieRepository movieRepository;
-
+    private final NotificationRepository notificationRepository;
     @GetMapping("/")
     public String home(@CurrentUser Account account, Model model) {
         if(account != null) {
