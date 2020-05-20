@@ -31,4 +31,7 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
 
     @EntityGraph(value = "Movie.withTagsAndZones", type = EntityGraph.EntityGraphType.FETCH)
     Movie findMovieWithTagsAndZonesById(Long id);
+
+    @EntityGraph(attributePaths = {"members", "managers"})
+    Movie findMovieWithManagersAndMembersById(Long id);
 }

@@ -4,12 +4,13 @@ import com.whataboutmv.modules.movie.Movie;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+
 @Getter
-public class MovieCreatedEvent {
+@RequiredArgsConstructor
+public class MovieUpdateEvent {
 
     private final Movie movie;
 
-    public MovieCreatedEvent(Movie movie) {
-       this.movie = movie;
-    }
+    private final String message;
+
 }

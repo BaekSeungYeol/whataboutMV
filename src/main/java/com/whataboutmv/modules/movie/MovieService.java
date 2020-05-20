@@ -2,6 +2,7 @@ package com.whataboutmv.modules.movie;
 
 import com.whataboutmv.modules.account.Account;
 import com.whataboutmv.modules.movie.event.MovieCreatedEvent;
+import com.whataboutmv.modules.movie.event.MovieUpdateEvent;
 import com.whataboutmv.modules.tag.Tag;
 import com.whataboutmv.modules.zone.Zone;
 import com.whataboutmv.modules.movie.form.MovieDescriptionForm;
@@ -49,6 +50,7 @@ public class MovieService {
 
     public void updateMovieDescription(Movie movie, MovieDescriptionForm movieDescriptionForm) {
         modelMapper.map(movieDescriptionForm, movie);
+        eventPublisher.publishEvent(new MovieUpdateEvent(movie, "영화모임 소개를 수정했습니다."));
     }
 
     public void updateMovieImage(Movie movie, String image) {
@@ -118,14 +120,19 @@ public class MovieService {
 
     public void close(Movie movie) {
         movie.close();
+        eventPublisher.publishEvent(new MovieUpdateEvent(movie, "영화모임을 종료했습니다."));
     }
 
     public void startRecruit(Movie movie) {
         movie.startRecruit();
+        eventPublisher.publishEvent(new MovieUpdateEvent(movie, "영화모임을 시작합니다."));
+
     }
 
     public void stopRecruit(Movie movie) {
         movie.stopRecruit();
+        eventPublisher.publishEvent(new MovieUpdateEvent(movie, "영화모임을 중단헀습니다."));
+
     }
 
     public boolean isValidPath(String newPath) {
