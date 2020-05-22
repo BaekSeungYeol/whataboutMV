@@ -36,8 +36,9 @@ public class MainController {
 
     @GetMapping("/search/movie")
     public String searchMovie(String keyword, Model model) {
-        //List<Movie> movieList = movieRepository.findByKeyword(keyword);
-        // TODO
-        return null;
+        List<Movie> movieList = movieRepository.findByKeyword(keyword);
+        model.addAttribute(movieList);
+        model.addAttribute("keyword", keyword);
+        return "search";
     }
 }

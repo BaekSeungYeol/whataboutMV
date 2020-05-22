@@ -96,7 +96,7 @@ public class Movie {
     }
 
     public String getImage() {
-        return image != null ? image : "/image/coupon.png";
+        return image != null ? image : "/images/coupon.png";
     }
 
     public void publish() {
