@@ -4,14 +4,18 @@ import com.whataboutmv.modules.account.Account;
 import com.whataboutmv.modules.movie.event.MovieCreatedEvent;
 import com.whataboutmv.modules.movie.event.MovieUpdateEvent;
 import com.whataboutmv.modules.tag.Tag;
+import com.whataboutmv.modules.tag.TagRepository;
 import com.whataboutmv.modules.zone.Zone;
 import com.whataboutmv.modules.movie.form.MovieDescriptionForm;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.utility.RandomString;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
 
 import static com.whataboutmv.modules.movie.form.MovieForm.VALID_PATH_PATTERN;
 
@@ -23,6 +27,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final ModelMapper modelMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final TagRepository tagRepository;
 
 
     public Movie createNewMovie(Movie movie, Account account) {
@@ -175,6 +180,24 @@ public class MovieService {
         checkIfExistingMovie(path, movie);
 
         return movie;
+    }
+
+    public void generateTestMovies(Account account) {
+        for(int i=0; i<30; ++i) {
+            String randomValue = RandomString.make(5);
+            Movie testMovie = Movie.builder()
+                    .title("테스트 영화모임" + randomValue)
+                    .path("test-" + randomValue)
+                    .shortDescription("테스트 모임")
+                    .tags(new HashSet<>())
+                    .managers(new HashSet<>())
+                    .build();
+
+            testMovie.publish();
+            Movie newMovie = this.createNewMovie(testMovie, account);
+            Tag crime = tagRepository.findByTitle("스릴러");
+            newMovie.getTags().add(crime);
+        }
     }
 }
 

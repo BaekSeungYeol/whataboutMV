@@ -1,9 +1,13 @@
 package com.whataboutmv.modules.movie;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.JPQLQuery;
 import com.whataboutmv.modules.account.QAccount;
 import com.whataboutmv.modules.tag.QTag;
 import com.whataboutmv.modules.zone.QZone;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
@@ -16,7 +20,7 @@ public class MovieRepositoryExtensionImpl extends QuerydslRepositorySupport impl
     }
 
     @Override
-    public List<Movie> findByKeyword(String keyword) {
+    public Page<Movie> findByKeyword(String keyword, Pageable pageable) {
         QMovie movie = QMovie.movie;
         JPQLQuery<Movie> query = from(movie).where(movie.published.isTrue()
                 .and(movie.title.containsIgnoreCase(keyword))
@@ -26,6 +30,9 @@ public class MovieRepositoryExtensionImpl extends QuerydslRepositorySupport impl
                 .leftJoin(movie.zones, QZone.zone).fetchJoin()
                 .leftJoin(movie.members, QAccount.account).fetchJoin()
                 .distinct();
-        return query.fetch();
+
+        JPQLQuery<Movie> pageableQuery = getQuerydsl().applyPagination(pageable, query);
+        QueryResults<Movie> fetchResults = pageableQuery.fetchResults();
+        return new PageImpl<>(fetchResults.getResults(), pageable, fetchResults.getTotal());
     }
 }

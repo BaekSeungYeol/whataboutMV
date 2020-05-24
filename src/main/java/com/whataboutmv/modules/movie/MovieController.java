@@ -83,4 +83,10 @@ public class MovieController {
         return "redirect:/movie/" + movie.getEncodedPath() + "/members";
     }
 
+//    @GetMapping("/movie/data")
+//    public String generateTestData(@CurrentUser Account account) {
+//        movieService.generateTestMovies(account);
+//        return "redirect:/";
+//    }
+
 }
