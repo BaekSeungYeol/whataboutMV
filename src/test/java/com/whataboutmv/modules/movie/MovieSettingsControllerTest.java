@@ -35,7 +35,8 @@ class MovieSettingsControllerTest{
         Movie movie = movieFactory.createMovie("test-comu", winwarm);
 
         mockMvc.perform(get("/movie/" + movie.getPath() + "/settings/description"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"));
     }
     @Test
     @WithAccount("seungyeol")

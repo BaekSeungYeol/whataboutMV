@@ -29,6 +29,7 @@ public class MainController {
             model.addAttribute(account);
         }
 
+        model.addAttribute("movieList", movieRepository.findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(true,false));
         return "index";
     }
 

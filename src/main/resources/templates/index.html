@@ -8,13 +8,25 @@
 <div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}">
     영화어때 가입을 완료하려면 <a href="#" th:href ="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
 </div>
-
-<div class="container">
-    <div class="py-5 text-center">
-        <h2>영화 어때</h2>
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1>영화어때</h1>
+        <p class="lead text-muted">
+            관심영화와 사는 지역을 통해 영화 모임를 찾고 이야기를 나눠보세요!<br/>
+            영화를 보고 난 후에 입이 근질 거렸다면? 모임을 만들어 보세요!
+        </p>
+        <p>
+            <a th:href="@{/signup}" class="btn btn-primary my-2">회원 가입</a>
+        </p>
     </div>
-
-    <div th:replace="fragments.html :: footer"></div>
+</section>
+<div class="container">
+    <div class="py-5 text-center pt-3">
+        <div th:replace="fragments.html :: movie-list (movieList=${movieList})"></div>
+    </div>
 </div>
+
+<div th:replace="fragments.html :: footer"></div>
+<div th:replace="fragments.html :: date-time"></div>
 </body>
 </html>

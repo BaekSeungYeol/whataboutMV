@@ -65,6 +65,30 @@
             background-position: left bottom;
             color: #000;
         }
+        .jumbotron {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            margin-bottom: 0;
+            background-color: #fff;
+        }
+        @media (min-width: 768px) {
+            .jumbotron {
+                padding-top: 6rem;
+                padding-bottom: 6rem;
+            }
+        }
+
+        .jumbotron p:last-child {
+            margin-bottom: 0;
+        }
+
+        .jumbotron h1 {
+            font-weight: 300;
+        }
+
+        .jumbotron .container {
+            max-width: 40rem;
+        }
     </style>
 </head>
 
@@ -579,6 +603,7 @@
                 </div>
             </form>
         </div>
+    </div>
 
         <ul th:fragment="notification-list (notifications)" class="list-group list-group-flush">
             <a href="#" th:href="@{${noti.link}}" th:each="noti: ${notifications}"
@@ -591,5 +616,43 @@
             </a>
         </ul>
 
+
+<div th:fragment="movie-list (movieList)" class="col-sm-10">
+    <div class="row">
+        <div class="col-md-4" th:each="movie: ${movieList}">
+            <div class="card mb-4 shadow-sm">
+                <img th:src="${movie.image}" class="context card-img-top" th:alt="${movie.title}" >
+                <div class="card-body">
+                    <a th:href="@{'/movie/' + ${movie.path}}" class="text-decoration-none">
+                        <h5 class="card-title context" th:text="${movie.title}"></h5>
+                    </a>
+                    <p class="card-text" th:text="${movie.shortDescription}">Short description</p>
+
+                    <p class="card-text context">
+                                    <span th:each="tag: ${movie.tags}" class="font-weight-light text-monospace badge badge-pill badge-info mr-3">
+                                        <a th:href="@{'/search/tag/' + ${tag.title}}" class="text-decoration-none text-white">
+                                            <i class="fa fa-tag"></i> <span th:text="${tag.title}">Tag</span>
+                                        </a>
+                                    </span>
+                        <span th:each="zone: ${movie.zones}" class="font-weight-light text-monospace badge badge-primary mr-3">
+                                        <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decoration-none text-white">
+                                            <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}" class="text-white">City</span>
+                                        </a>
+                                    </span>
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fa fa-user-circle"></i>
+                            <span th:text="${movie.memberCount}"></span>명
+                        </small>
+                        <small class="text-muted date" th:text="${movie.publishedDateTime}">9 mins</small>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
 </html>

@@ -28,7 +28,6 @@ public class MovieRepositoryExtensionImpl extends QuerydslRepositorySupport impl
                 .or(movie.zones.any().localNameOfCity.containsIgnoreCase(keyword)))
                 .leftJoin(movie.tags, QTag.tag).fetchJoin()
                 .leftJoin(movie.zones, QZone.zone).fetchJoin()
-                .leftJoin(movie.members, QAccount.account).fetchJoin()
                 .distinct();
 
         JPQLQuery<Movie> pageableQuery = getQuerydsl().applyPagination(pageable, query);
