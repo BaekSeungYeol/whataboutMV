@@ -1,7 +1,9 @@
 package com.whataboutmv.main;
 
+import com.whataboutmv.modules.account.AccountRepository;
 import com.whataboutmv.modules.account.CurrentUser;
 import com.whataboutmv.modules.account.Account;
+import com.whataboutmv.modules.event.EnrollmentRepository;
 import com.whataboutmv.modules.movie.Movie;
 import com.whataboutmv.modules.movie.MovieRepository;
 import com.whataboutmv.modules.notification.NotificationRepository;
@@ -23,11 +25,15 @@ public class MainController {
 
     private final MovieRepository movieRepository;
     private final NotificationRepository notificationRepository;
+    private final AccountRepository accountRepository;
+    private final EnrollmentRepository enrollmentRepository;
+
     @GetMapping("/")
     public String home(@CurrentUser Account account, Model model) {
         if(account != null) {
-            model.addAttribute(account);
-        }
+            Account accountLoaded = accountRepository.findAccountWithTagsAndZonesById(account.getId());
+            model.addAttribute(accountLoaded);
+            model.addAttribute("enrollmentList", enrollmentRepository.findByAccountAndAcceptedOrderByEnrolledAtDesc(accountLoaded, true));   }
 
         model.addAttribute("movieList", movieRepository.findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(true,false));
         return "index";
