@@ -27,17 +27,7 @@ class MovieSettingsControllerTest{
     @Autowired
     AccountRepository accountRepository;
 
-    @Test
-    @WithAccount("seungyeol")
-    @DisplayName("모임 소개 수정 폼 조회 - 실패 ( 권한 없는 유저 )")
-    void updateDescriptionForm_fail() throws Exception {
-        Account winwarm = accountFactory.createAccount("winwarm");
-        Movie movie = movieFactory.createMovie("test-comu", winwarm);
 
-        mockMvc.perform(get("/movie/" + movie.getPath() + "/settings/description"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("error"));
-    }
     @Test
     @WithAccount("seungyeol")
     @DisplayName("모임 소개 수정 폼 조회 - 성공 ( 권한 있는 유저 )")

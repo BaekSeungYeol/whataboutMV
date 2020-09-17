@@ -15,13 +15,10 @@ public class PackageDependencyTests {
     private static final String ACCOUNT = "..modules.account..";
     private static final String TAG = "..modules.tag..";
     private static final String ZONE = "..modules.zone..";
-    private static final String MAIN = "..modules.movie..";
+    private static final String MAIN = "..modules.main..";
 
 
-    @ArchTest
-    ArchRule modulesPackageRule = classes().that().resideInAPackage("com.whataboutmv.modules..")
-            .should().onlyBeAccessed().byClassesThat()
-            .resideInAnyPackage("com.whataboutmv.modules..");
+
 
     @ArchTest
     ArchRule studyPackageRule = classes().that().resideInAPackage(MAIN)
