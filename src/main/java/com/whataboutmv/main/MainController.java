@@ -30,11 +30,21 @@ public class MainController {
 
     @GetMapping("/")
     public String home(@CurrentUser Account account, Model model) {
-        if(account != null) {
+        if (account != null) {
             Account accountLoaded = accountRepository.findAccountWithTagsAndZonesById(account.getId());
             model.addAttribute(accountLoaded);
-            model.addAttribute("enrollmentList", enrollmentRepository.findByAccountAndAcceptedOrderByEnrolledAtDesc(accountLoaded, true));   }
+            model.addAttribute("enrollmentList", enrollmentRepository.findByAccountAndAcceptedOrderByEnrolledAtDesc(accountLoaded, true));
 
+            model.addAttribute("movieList", movieRepository.findByAccount(
+                    accountLoaded.getTags(),
+                    accountLoaded.getZones()));
+            model.addAttribute("movieManagerOf",
+                    movieRepository.findFirst5ByManagersContainingAndClosedOrderByPublishedDateTimeDesc(account, false));
+            model.addAttribute("movieMemberOf",
+                    movieRepository.findFirst5ByMembersContainingAndClosedOrderByPublishedDateTimeDesc(account, false));
+            return "index-after-login";
+
+        }
         model.addAttribute("movieList", movieRepository.findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(true,false));
         return "index";
     }

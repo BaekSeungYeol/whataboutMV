@@ -15,6 +15,7 @@ public class PackageDependencyTests {
     private static final String ACCOUNT = "..modules.account..";
     private static final String TAG = "..modules.tag..";
     private static final String ZONE = "..modules.zone..";
+    private static final String MAIN = "..modules.movie..";
 
 
     @ArchTest
@@ -23,9 +24,9 @@ public class PackageDependencyTests {
             .resideInAnyPackage("com.whataboutmv.modules..");
 
     @ArchTest
-    ArchRule studyPackageRule = classes().that().resideInAPackage("..modules.movie..")
+    ArchRule studyPackageRule = classes().that().resideInAPackage(MAIN)
             .should().onlyBeAccessed().byClassesThat()
-            .resideInAnyPackage(MOVIE, EVENT);
+            .resideInAnyPackage(MOVIE, EVENT, MAIN);
 
     @ArchTest
     ArchRule eventPackageRule = classes().that().resideInAPackage(EVENT)

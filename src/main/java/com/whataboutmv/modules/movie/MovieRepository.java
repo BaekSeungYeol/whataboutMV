@@ -1,5 +1,6 @@
 package com.whataboutmv.modules.movie;
 
+import com.whataboutmv.modules.account.Account;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,5 +38,10 @@ public interface MovieRepository extends JpaRepository<Movie,Long>, MovieReposit
     @EntityGraph(attributePaths = {"members", "managers"})
     Movie findMovieWithManagersAndMembersById(Long id);
 
+    @EntityGraph(attributePaths = {"zones", "tags"})
     List<Movie> findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(boolean published, boolean closed);
+
+    List<Movie> findFirst5ByManagersContainingAndClosedOrderByPublishedDateTimeDesc(Account account, boolean closed);
+
+    List<Movie> findFirst5ByMembersContainingAndClosedOrderByPublishedDateTimeDesc(Account account, boolean closed);
 }

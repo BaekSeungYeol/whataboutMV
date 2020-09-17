@@ -192,6 +192,7 @@ public class SettingsController {
         Set<Zone> zones = accountService.getZones(account);
         model.addAttribute("zones", zones.stream().map(Zone::toString).collect(Collectors.toList()));
 
+        // TODO STRING 변환하기
         List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
         model.addAttribute("whitelist", objectMapper.writeValueAsString(allZones));
 
