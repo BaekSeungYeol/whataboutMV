@@ -25,14 +25,19 @@ public class ZoneService {
 
     @PostConstruct
     public void initZoneData() throws IOException {
-        if (zoneRepository.count() == 0) {
+        if (zoneRepository.count() <= 1) {
             ClassPathResource resource = new ClassPathResource("zones_kr.csv");
 
             byte[] data = FileCopyUtils.copyToByteArray(resource.getInputStream());
             String val = new String(data, StandardCharsets.UTF_8);
             List<String> datas = Arrays.asList(val.split( "\r\n"));
 
-            datas.stream().map(per -> per.split(",")).map(split -> Zone.builder().city(split[0]).localNameOfCity(split[1]).province(split[2]).build()).forEach(zoneRepository::save);
+            for(int i=0; i <datas.size(); ++i) {
+                String per = datas.get(i);
+                String[] split = per.split(",");
+                Zone zone = Zone.builder().city(split[0]).localNameOfCity(split[1]).province(split[2]).build();
+                zoneRepository.save(zone);
+            }
         }
     }
 }
